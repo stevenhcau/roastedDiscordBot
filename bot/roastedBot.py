@@ -160,6 +160,35 @@ async def fetchServerInfo(ctx):
 	await ctx.send(f'Server Size: {len(guild.members)}')
 	await ctx.send(f'Administrator Name: {guild.owner.display_name}')
 
+@bot.command(name='canadasnow', help='checks for snow in the forecast in Canadian ski resorts')
+async def canada_snowReport(ctx):
+    logger.debug(f'Command sent from channel {ctx.channel}')
+    logger.debug(f'Command author: {ctx.author}')
+    logger.debug(f'Command content: -----  {ctx.message.content} -----  \n')
+
+    await ctx.send(f'Checking snow reports for Canadian resorts.... please note that 0mm total precipitation does not mean there is no snow, it just means that the snowfall is not significant.')
+    await ctx.send(f'...')
+
+    for resort_key in snowReport.CANADA_RESORTS:
+        resort_object = snowReport.Resort(resort_key)
+        resort_object.request_96hr()
+        resort_temp = resort_object.get_temperature_96hr()
+        resort_precipitation_type = resort_object.get_precipitation_type_96hr()
+        resort_precipitation = resort_object.get_precipitation_96hr()
+
+        total_precipitation = 0
+        for preciptation_value in resort_precipitation.values():
+            total_precipitation = int(preciptation_value) + int(total_precipitation)
+
+        if 'snow' in resort_precipitation_type.values():
+            await ctx.send(f'{resort_object.name} is expecting snow in the next 4 days')
+            await ctx.send(f'Total snow expected: {total_precipitation} mm \n')
+            await ctx.send(f'...')
+        else:
+            await ctx.send(f'{resort_object.name} is not expecting snow in the next 4 days')
+            await ctx.send(f'...')
+        
+
 # Bot event that sends a DM to a user when the join the server
 @bot.event
 async def on_member_join(member): 
