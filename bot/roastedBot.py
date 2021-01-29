@@ -12,15 +12,24 @@ from discord.ext.commands import Bot
 from dotenv import load_dotenv
 import logging
 import os
+import sys
 
 DESCRIPTION = "This is a discord bot for the roasted server."
 
 # Sets up where the files will be
 ABS_PATH = os.path.abspath(__file__)
 D_NAME = os.path.dirname(ABS_PATH)
-currentDir = os.getcwd()
+current_dir = os.getcwd()
 
-if currentDir != D_NAME:
+# This sets up the sys.path to tell the system where to look for packages. It adds the current working directory (snowReportApp) to the highest level to sys.path
+sys.path.append(current_dir)
+
+# Then it opens the module from the snowApp directory
+# Pylint is throwing an Unable to import 'snowApp' error because it does not know where to look for modules. Pylint does not execute the code so it does not recognize sys.path.append
+# Running the code still works despite the error that pylint is throwing
+from snowApp import snowReport # pylint: disable=import-error
+
+if current_dir != D_NAME:
     os.chdir(D_NAME)
 else:
     pass
@@ -34,9 +43,10 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(me
 
 logger.addHandler(handler)
 
+logger.debug(f'Adding to PATH... {current_dir}')
 logger.debug(f'ABS_PATH: {ABS_PATH}')
 logger.debug(f'D_NAME: {D_NAME}')
-logger.debug(f'Current Directory: {currentDir}')
+logger.debug(f'Current Directory: {current_dir} \n')
 
 # Grabs discord token from .env
 load_dotenv(".env")
@@ -101,7 +111,8 @@ async def on_message(message):
         logger.debug(f'Message author: {message.author}')
         logger.debug(f'Bot username: {bot.user} \n' )
 
-        # If the message is a DM and the user replies with !accept, then we will asign them their role to Member
+        # If the message is a DM and the user replies with !accept, th"en we will asign them their role to Member
+        # The guild id and role ids are extracted from the Dicord server. This code block works because this bot is only being used on this server
         if message.content == '!accept':
             guild_id = bot.get_guild(int(748917163313725704))
             role = guild_id.get_role(int(800907308887572521))
@@ -115,13 +126,12 @@ async def on_message(message):
         # Else, any other message is ignored and the bot requests that the user reads the rules and replies with !accept
         else:
             logger.debug(f'Sending message "Please read the rules and reply with "!accept" \n')
-            await message.channel.send('Please read the rules and reply with "!accept')
+            await message.channel.send('Please read the rules and reply with "!accept"')
 
-    # This checks if the message !accept happens and is not sent by th ebot
+    # This checks if the message !accept happens and is not sent by the bot
     if message.content == '!accept' and message.author != bot.user:
         logger.debug(f'Message sent from channel: {message.channel}')
-        logger.debug(f'Message author: {message.author}')
-        logger.debug(f'Bot username: {bot.user}')
+        logger.debug(f'Message author: {message.author} \n')
 
         # This checks if the message content is !accept and is not a DM, so it happens in the main server and sends a message notifying the user that the !accept command is reserved only for DMs
         if message.content == '!accept' and not isinstance(message.channel, discord.DMChannel):
@@ -153,10 +163,10 @@ async def fetchServerInfo(ctx):
 # Bot event that sends a DM to a user when the join the server
 @bot.event
 async def on_member_join(member): 
-    print(f'{member.name} has joined the server...')
-    print(f'{member.name} ID: {member.id}')    
-    print(f'Sending DM to {member.name}')
-
+    logger.debug(f'{member.name} has joined the server...')
+    logger.debug(f'{member.name} ID: {member.id}')    
+    logger.debug(f'Sending DM to {member.name} \n')
+    
     welcomeMessage = "Welcome to this server. Please reply with read the rules below and reply with '!accept' to join the server."
     await member.send(content=welcomeMessage)
 
