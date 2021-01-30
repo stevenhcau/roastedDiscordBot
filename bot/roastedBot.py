@@ -115,7 +115,7 @@ async def on_message(message):
 # If the !accept command was issued in a DM, then the bot will reply and say it is adding to the member role
 # If they are already a member, nothing is done and it says that member is already assigned the role in the log.
 # The code block then enters the message async function to actually assign the role
-@bot.command(pass_context=True, name='accept')
+@bot.command(pass_context=True, name='accept', help='Accept command for new users after reading the rules')
 async def assign_role(ctx):
     logger.debug(f'async def assign_role')
     logger.debug(f'Command sent from channel {ctx.channel}')
@@ -147,7 +147,7 @@ async def assign_role(ctx):
             
 
 # !server command displays the below information
-@bot.command(name='server', help='fetches server information')
+@bot.command(name='server', help='Fetches server information')
 async def fetch_server_info(ctx):
     guild = ctx.guild
     logger.debug(f'async def fetch_server_info')
@@ -170,7 +170,7 @@ async def fetch_server_info(ctx):
     
 
 # !canadasnow command checks the ski resorts in Canada for snow in the next 4 days
-@bot.command(name='canadasnow', help='checks for snow in the forecast in Canadian ski resorts')
+@bot.command(name='canadasnow', help='Checks for snow in the forecast in Canadian ski resorts')
 async def canada_snowReport(ctx):
     logger.debug(f'async def canada_snowReport')
     logger.debug(f'Command sent from channel {ctx.channel}')
@@ -210,7 +210,7 @@ async def canada_snowReport(ctx):
         await ctx.send('Invalid command, please !accept the rules.')
 
 # !USAsnow command checks for the snow in the forecast in American resorts for the next 4 days
-@bot.command(name='USAsnow', help='checks for snow in the forecast in American ski resorts')
+@bot.command(name='USAsnow', help='Checks for snow in the forecast in American ski resorts')
 async def USA_snowReport(ctx):
     logger.debug(f'async def USA_snowReport')
     logger.debug(f'Command sent from channel {ctx.channel}')
@@ -251,7 +251,7 @@ async def USA_snowReport(ctx):
     else:
         await ctx.send('Invalid command, please !accept the rules.')
 
-@bot.command(name='resorts', help='lists the resorts that the user can request snow report forecasts')
+@bot.command(name='resorts', help='Lists the resorts that the user can request snow report forecasts')
 async def list_resorts(ctx):
     logger.debug(f'async def list_resorts')
     logger.debug(f'Command sent from channel {ctx.channel}')
@@ -283,7 +283,7 @@ async def list_resorts(ctx):
     else:
         await ctx.send('Invalid command, please !accept the rules.')
 
-@bot.command(name='checksnow', help='checks for snow in the forecast for the resort passed as an argument')
+@bot.command(name='checksnow', help='Checks for snow in the forecast for the resort passed as an argument')
 async def check_4day_snow(ctx, resort_key):
     logger.debug(f'async check_4day_snow')
     logger.debug(f'Command sent from channel {ctx.channel}')
