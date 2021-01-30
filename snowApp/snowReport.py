@@ -45,11 +45,6 @@ URL_NOWCAST = "https://api.climacell.co/v3/weather/nowcast"
 URL_REALTIME = "https://api.climacell.co/v3/weather/realtime"
 SKI_RESORT_JSON = "skiResorts.json"
 
-
-STARRED_RESORTS = ["lakeLouise", "sunshine", "fernie", "revelstoke", "whistler"]
-ALBERTA_RESORTS = ["lakeLouise", "sunshine", "nakiska", "castleMountain", "norquay"]
-
-
 # Sets up where the files will be
 ABS_PATH = os.path.abspath(__file__)
 D_NAME = os.path.dirname(ABS_PATH)
@@ -77,6 +72,29 @@ logger.debug(f'Current Directory: {current_dir} \n')
 load_dotenv(".env")
 CLIMACELL_TOKEN = os.getenv('CLIMACELL_TOKEN')
 logger.debug(f'Climacell Token: {CLIMACELL_TOKEN}')
+
+# Creating lists of resorts for access
+
+STARRED_RESORTS = ["lakeLouise", "sunshine", "fernie", "revelstoke", "whistler"]
+ALBERTA_RESORTS = ["lakeLouise", "sunshine", "nakiska", "castleMountain", "norquay"]
+
+with open(SKI_RESORT_JSON, "r") as f:
+    resort_json = json.load(f)
+    CANADA_RESORTS = [resort_key for resort_key in resort_json if resort_json[resort_key]['country'] == 'Canada']
+    logger.debug(f'Creating list of keys of CANADA_RESORTS')
+    logger.debug(f'{CANADA_RESORTS} \n')
+
+    USA_RESORTS = [resort_key for resort_key in resort_json if resort_json[resort_key]['country'] == 'USA']
+    logger.debug(f'Creating list of keys of USA_RESORTS')
+    logger.debug(f'{USA_RESORTS} \n')
+
+    logger.debug(f'Creating list of keys of RESORT_NAMES')
+    RESORT_NAMES = [resort_json[resort_key]['name'] for resort_key in resort_json]
+    logger.debug(f'{RESORT_NAMES} \n')
+
+    logger.debug(f'Creating list of keys of RESORT_KEYS')
+    RESORT_KEYS = [resort_key for resort_key in resort_json]
+    logger.debug(f'{RESORT_KEYS} \n')
 
 
 # This method takes the string of a time in ISO 8601 format and converts it to local time using the system timezone
