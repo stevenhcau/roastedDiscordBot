@@ -322,10 +322,44 @@ async def check_4day_snow(ctx, resort_key):
         else: 
             await dmchannel.send(f'Error, I cannot find the key "{resort_key}" in my database, please check the key and try again.')
 
-# Checks if the user is a member, if not, it asks the users to !accept the rulesf
+# Checks if the user is a member, if not, it asks the users to !accept the rules
     else:
         await ctx.send('Invalid command, please !accept the rules.')
 
+
+@bot.command(name='checktemp', help='Checks for temperature for the resort passed as an argument')
+async def check_temp_now(ctx, resort_key):
+    logger.debug(f'async check_temp_now')
+    logger.debug(f'Command sent from channel {ctx.channel}')
+    logger.debug(f'Command author: {ctx.author}')
+    logger.debug(f'Command content: -----  {ctx.message.content} -----  \n')
+
+    guild_id = bot.get_guild(int(748917163313725704))
+    role = guild_id.get_role(int(800907308887572521))
+    member = guild_id.get_member(ctx.author.id)
+
+    dmchannel = await ctx.author.create_dm()
+
+# Checks if the user is a member, if they are, it executes it.
+    if role in member.roles:
+
+        await ctx.send(f'Checking temperature... please check your DM')
+
+        if resort_key in snowReport.RESORT_KEYS:
+            resort_object = snowReport.Resort(resort_key)
+            resort_object.request_now()
+            resort_temp = resort_object.now_temperature
+
+            await dmchannel.send(f'The current temperature of {resort_object.name} is {resort_temp} degrees C')
+
+        else: 
+            await dmchannel.send(f'Error, I cannot find the key "{resort_key}" in my database, please check the key and try again.')
+
+# Checks if the user is a member, if not, it asks the users to !accept the rules
+    else:
+        await ctx.send('Invalid command, please !accept the rules.')
+
+        
 # Bot even tthat sends a DM to the new member when they join the server
 @bot.event
 async def on_member_join(member): 
