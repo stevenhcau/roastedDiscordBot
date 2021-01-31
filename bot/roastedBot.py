@@ -326,7 +326,7 @@ async def check_4day_snow(ctx, resort_key):
     else:
         await ctx.send('Invalid command, please !accept the rules.')
 
-
+# Checks the current temperature of the 
 @bot.command(name='checktemp', help='Checks for temperature for the resort passed as an argument')
 async def check_temp_now(ctx, resort_key):
     logger.debug(f'async check_temp_now')
