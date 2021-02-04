@@ -299,7 +299,7 @@ class Resort():
         self.temperature_forecast_6hr = {time_6hr[i]: temp_6hr[i] for i in range(len(time_6hr))}
         logger.debug(f'Returning dictionary containing time:value pair, "self.temperature_forecast_6hr \n')
         return self.temperature_forecast_6hr
-
+ 
     # Class method get_temperature_now() returns a dictionary of the temperature against time
     def get_temperature_now(self):
         logger.debug(f'Function call: get_temperature_now()')

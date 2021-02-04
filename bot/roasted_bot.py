@@ -62,7 +62,7 @@ logger.debug(f'Current Directory: {current_dir} \n')
 
 # Grabs discord token from .env
 load_dotenv(".env")
-logger.debug(f'Successfully retrieved DISCORD_TOKEN, ACCESS_KEY, SECRET_KEY')
+logger.debug(f'Successfully retrieved DISCORD_TOKEN, AWS_ACCESS_KEY, AWS_SECRET_KEY')
 TOKEN = os.getenv('DISCORD_TOKEN')
 ACCESS_KEY = os.getenv('AWS_ACCESS_KEY')
 SECRET_KEY = os.getenv('AWS_SECRET_KEY')
