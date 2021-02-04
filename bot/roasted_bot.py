@@ -32,7 +32,7 @@ sys.path.append(current_dir)
 # Then it opens the module from the snowApp directory
 # Pylint is throwing an Unable to import 'snowApp' error because it does not know where to look for modules. Pylint does not execute the code so it does not recognize sys.path.append
 # Running the code still works despite the error that pylint is throwing
-from snowApp import snow_report# pylint: disable=import-error
+from snowapp import snow_report# pylint: disable=import-error
 
 if current_dir != D_NAME:
     os.chdir(D_NAME)
