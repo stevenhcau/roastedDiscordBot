@@ -26,13 +26,13 @@ ABS_PATH = os.path.abspath(__file__)
 D_NAME = os.path.dirname(ABS_PATH)
 current_dir = os.getcwd()
 
-# This sets up the sys.path to tell the system where to look for packages. It adds the current working directory (snowReportApp) to the highest level to sys.path
+# This sets up the sys.path to tell the system where to look for packages. It adds the current working directory (snow_reportApp) to the highest level to sys.path
 sys.path.append(current_dir)
 
 # Then it opens the module from the snowApp directory
 # Pylint is throwing an Unable to import 'snowApp' error because it does not know where to look for modules. Pylint does not execute the code so it does not recognize sys.path.append
 # Running the code still works despite the error that pylint is throwing
-from snowApp import snowReport # pylint: disable=import-error
+from snowApp import snow_report# pylint: disable=import-error
 
 if current_dir != D_NAME:
     os.chdir(D_NAME)
@@ -188,8 +188,8 @@ async def fetch_server_info(ctx):
 
 # !canadasnow command checks the ski resorts in Canada for snow in the next 4 days
 @bot.command(name='canadasnow', help='Checks for snow in the forecast in Canadian ski resorts')
-async def canada_snowReport(ctx):
-    logger.debug(f'async def canada_snowReport')
+async def canada_snow_report(ctx):
+    logger.debug(f'async def canada_snow_report')
     logger.debug(f'Command sent from channel {ctx.channel}')
     logger.debug(f'Command author: {ctx.author}')
     logger.debug(f'Command content: -----  {ctx.message.content} ----- ')
@@ -205,8 +205,8 @@ async def canada_snowReport(ctx):
 
         dmchannel = await ctx.author.create_dm()
 
-        for resort_key in snowReport.CANADA_RESORTS:
-            resort_object = snowReport.Resort(resort_key)
+        for resort_key in snow_report.CANADA_RESORTS:
+            resort_object = snow_report.Resort(resort_key)
             resort_object.request_96hr()
             # resort_temp = resort_object.get_temperature_96hr()
             resort_precipitation_type = resort_object.get_precipitation_type_96hr()
@@ -231,8 +231,8 @@ async def canada_snowReport(ctx):
 
 # !USAsnow command checks for the snow in the forecast in American resorts for the next 4 days
 @bot.command(name='USAsnow', help='Checks for snow in the forecast in American ski resorts')
-async def USA_snowReport(ctx):
-    logger.debug(f'async def USA_snowReport')
+async def USA_snow_report(ctx):
+    logger.debug(f'async def USA_snow_report')
     logger.debug(f'Command sent from channel {ctx.channel}')
     logger.debug(f'Command author: {ctx.author}')
     logger.debug(f'Command content: -----  {ctx.message.content} -----  ')
@@ -249,8 +249,8 @@ async def USA_snowReport(ctx):
         
         dmchannel = await ctx.author.create_dm()
 
-        for resort_key in snowReport.USA_RESORTS:
-            resort_object = snowReport.Resort(resort_key)
+        for resort_key in snow_report.USA_RESORTS:
+            resort_object = snow_report.Resort(resort_key)
             resort_object.request_96hr()
             # resort_temp = resort_object.get_temperature_96hr()
             resort_precipitation_type = resort_object.get_precipitation_type_96hr()
@@ -291,7 +291,7 @@ async def list_resorts(ctx):
 
         dmchannel = await ctx.author.create_dm()
 
-        resort_name_key_dict = {snowReport.RESORT_NAMES[i]: snowReport.RESORT_KEYS[i] for i in range(len(snowReport.RESORT_NAMES))}
+        resort_name_key_dict = {snow_report.RESORT_NAMES[i]: snow_report.RESORT_KEYS[i] for i in range(len(snow_report.RESORT_NAMES))}
 
         await dmchannel.send(f'To check for snow, put a ! at the beginning of the searchable keyword and snow at the end. For example, to search for 4 day forecast of whistler, type !checksnow <insert key here>')
         await dmchannel.send(f'Please wait a few seconds for me to work....')
@@ -320,12 +320,12 @@ async def check_4day_snow(ctx, resort_key):
 
 # Checks if the user is a member, if they are, it executes it.
     if role in member.roles:
-        if resort_key in snowReport.RESORT_KEYS:
+        if resort_key in snow_report.RESORT_KEYS:
             logger.debug(f'Checking if snow is in the forecast for requested resort')
             await ctx.send(f'Checking forecast... please check your DM')
             await dmchannel.send(f'Checking for snow for resort key {resort_key}, please wait a few seconds for me to work....')
 
-            resort_object = snowReport.Resort(resort_key)
+            resort_object = snow_report.Resort(resort_key)
             resort_object.request_96hr()
             # resort_temp = resort_object.get_temperature_96hr()
             resort_precipitation_type = resort_object.get_precipitation_type_96hr()
@@ -360,15 +360,13 @@ async def check_temp_now(ctx, resort_key):
     logger.debug(f'Command content: -----  {ctx.message.content} ----- ')
 
     guild_id = bot.get_guild(int(748917163313725704))
-    role = guild_id.get_role(int(800907308887572521))
-    member = guild_id.get_member(ctx.author.id)
-
-    dmchannel = await ctx.author.create_dm()
-
-# Checks if the user is a member, if they are, it executes it.
+    role = guild_id.get_role(int(800907308882521))
+    member = guild_id.get_member(ctx.author)
+    dmchannel = await ctx.author.create_dm
+# Checks if the user is a member, if they arit executes it.
     if role in member.roles:
-        if resort_key in snowReport.RESORT_KEYS:
-            resort_object = snowReport.Resort(resort_key)
+        if resort_key in snow_report.RESORT_KEYS:
+            resort_object = snow_report.Resort(resort_key)
             resort_object.request_now()
             resort_temp = resort_object.now_temperature
 
@@ -401,8 +399,8 @@ async def check_feelslike_now(ctx, resort_key):
 
 # Checks if the user is a member, if they are, it executes it.
     if role in member.roles:
-        if resort_key in snowReport.RESORT_KEYS:
-            resort_object = snowReport.Resort(resort_key)
+        if resort_key in snow_report.RESORT_KEYS:
+            resort_object = snow_report.Resort(resort_key)
             resort_object.request_now()
             resort_feelslike = resort_object.now_feelslike
 
