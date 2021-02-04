@@ -21,9 +21,6 @@ import sys
 from multiprocessing import Process
 from timeloop import Timeloop
 
-DESCRIPTION = "This is a discord bot for the roasted server."
-SEND_LOG_SECONDS = 1
-
 # Sets up where the files will be
 ABS_PATH = os.path.abspath(__file__)
 D_NAME = os.path.dirname(ABS_PATH)
@@ -41,6 +38,8 @@ if current_dir != D_NAME:
     os.chdir(D_NAME)
 else:
     pass
+
+DESCRIPTION = "This is a discord bot for the roasted server."
 
 # ------------------------------------------------------------logger------------------------------------------------------------
 
@@ -432,7 +431,6 @@ async def on_member_join(member):
     welcomeMessage = "Welcome to this server. Please reply with read the rules below and reply with '!accept' to join the server."
     await member.send(content=welcomeMessage)
 
-
 # ------------------------------------------------------------AWS S3------------------------------------------------------------
 
 # Set up AWS S3 Client with central Canada region
@@ -460,8 +458,6 @@ def run_s3():
 tl = Timeloop()
 @tl.job(interval=datetime.timedelta(seconds=300))
 def send_log_60s():
-
-
 
     # Creating the string for the log file name, this is unique to the time
     now = datetime.datetime.now()
