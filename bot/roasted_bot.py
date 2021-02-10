@@ -301,7 +301,7 @@ async def list_resorts(ctx):
 
 @bot.command(name='checksnow', help='Checks for snow in the forecast for the resort passed as an argument')
 async def check_4day_snow(ctx, resort_key):
-    logger.debug(f'async check_4day_snow: Command ("!checksnow arg"): Author ({ctx.author}): Channel: ({ctx.channel})')
+    logger.debug(f'async check_4day_snow: Command ("!checksnow {resort_key}"): Author ({ctx.author}): Channel: ({ctx.channel})')
 
     guild_id = bot.get_guild(int(748917163313725704))
     role = guild_id.get_role(int(800907308887572521))
@@ -311,10 +311,10 @@ async def check_4day_snow(ctx, resort_key):
 
 # Checks if the user is a member, if they are, it executes it.
     if role in member.roles:
-        logger.debug(f'async check_4day_snow: {ctx.author} role authorization successful')
+        logger.debug(f'async def check_4day_snow: {ctx.author} role authorization successful')
 
         if resort_key in snow_report.RESORT_KEYS:
-            logger.debug(f'async check_4day_snow: Checking if snow is in the forecast for requested resort')
+            logger.debug(f'async def check_4day_snow: Checking if snow is in the forecast for requested resort')
             await ctx.send(f'Checking forecast... please check your DM')
             await dmchannel.send(f'Checking for snow for resort key {resort_key}, please wait a few seconds for me to work....')
 
@@ -328,7 +328,7 @@ async def check_4day_snow(ctx, resort_key):
             for preciptation_value in resort_precipitation.values():
                 total_precipitation = int(preciptation_value) + int(total_precipitation)
 
-            logger.debug(f'async check_4day_snow: Sending requested information')
+            logger.debug(f'async def check_4day_snow: Sending requested information')
             if 'snow' in resort_precipitation_type.values():
                 await dmchannel.send(f'{resort_object.name} is expecting snow in the next 4 days ({total_precipitation} mm)')
             else:
@@ -337,17 +337,17 @@ async def check_4day_snow(ctx, resort_key):
         else: 
             await ctx.send(f'Checking forecast... please check your DM')
             await dmchannel.send(f'Error, I cannot find the key "{resort_key}" in my database, please check the key and try again')
-            logger.debug(f'async check_4day_snow: Error, cannot find {resort_key}')
+            logger.debug(f'async def check_4day_snow: Error, cannot find {resort_key}')
 
 # Checks if the user is a member, if not, it asks the users to !accept the rules
     else:
-        logger.debug(f'async check_4day_snow: Author {ctx.author} not part of Member role.')
+        logger.debug(f'async def check_4day_snow: Author {ctx.author} not part of Member role.')
         await ctx.send('Invalid command, please !accept the rules.')
 
 # Checks the current temperature of the requested resort
 @bot.command(name='checktemp', help='Checks for temperature for the resort passed as an argument')
 async def check_temp_now(ctx, resort_key):
-    logger.debug(f'async check_temp_now: Command ("!checktemp arg"): Author ({ctx.author}): Channel: ({ctx.channel})')
+    logger.debug(f'async def check_temp_now: Command ("!checktemp {resort_key}"): Author ({ctx.author}): Channel: ({ctx.channel})')
 
     guild_id = bot.get_guild(int(748917163313725704))
     role = guild_id.get_role(int(800907308887572521))
@@ -357,10 +357,10 @@ async def check_temp_now(ctx, resort_key):
 
 # Checks if the user is a member, if they are, it executes it.
     if role in member.roles:
-        logger.debug(f'async feelslike_now: {ctx.author} role authorization successful')  
+        logger.debug(f'async def check_temp_now: {ctx.author} role authorization successful')  
 
         if resort_key in snow_report.RESORT_KEYS:
-            logger.debug(f'async check_temp_now: Sending requested information')
+            logger.debug(f'async def check_temp_now: Sending requested information')
             await ctx.send(f'Checking temperature... please check your DM')
 
             resort_object = snow_report.Resort(resort_key)
@@ -370,19 +370,19 @@ async def check_temp_now(ctx, resort_key):
             await dmchannel.send(f'The current temperature of {resort_object.name} is {resort_temp} degrees C')
 
         else: 
-            logger.debug(f'async check_temp_now: Error, cannot find {resort_key}')
+            logger.debug(f'async def check_temp_now: Error, cannot find {resort_key}')
             await ctx.send(f'Checking temperature... please check your DM')
             await dmchannel.send(f'Error, I cannot find the key "{resort_key}" in my database, please check the key and try again.')
 
 # Checks if the user is a member, if not, it asks the users to !accept the rules
     else:
-        logger.debug(f'async check_temp_now: Author {ctx.author} not part of Member role.')
+        logger.debug(f'async def check_temp_now: Author {ctx.author} not part of Member role.')
         await ctx.send('Invalid command, please !accept the rules.')
 
 
 @bot.command(name='checkfeelslike', help='Checks for feels like temperature for the resort passed as an argument')
 async def check_feelslike_now(ctx, resort_key):
-    logger.debug(f'async feelslike_now: Command ("!checkfeelslike arg"): Author ({ctx.author}): Channel: ({ctx.channel})')
+    logger.debug(f'async def feelslike_now: Command ("!checkfeelslike {resort_key}"): Author ({ctx.author}): Channel: ({ctx.channel})')
 
     guild_id = bot.get_guild(int(748917163313725704))
     role = guild_id.get_role(int(800907308887572521))
@@ -392,10 +392,10 @@ async def check_feelslike_now(ctx, resort_key):
 
 # Checks if the user is a member, if they are, it executes it.
     if role in member.roles:
-        logger.debug(f'async feelslike_now: {ctx.author} role authorization successful') 
+        logger.debug(f'async def feelslike_now: {ctx.author} role authorization successful') 
 
         if resort_key in snow_report.RESORT_KEYS:
-            logger.debug(f'async check_feelslike_now: Sending requested information')
+            logger.debug(f'async def check_feelslike_now: Sending requested information')
             await ctx.send(f'Checking "feels like" temperature... please check your DM')
 
             resort_object = snow_report.Resort(resort_key)
@@ -405,20 +405,20 @@ async def check_feelslike_now(ctx, resort_key):
             await dmchannel.send(f'It currently feels like {resort_feelslike} degrees C at {resort_object.name}')
 
         else: 
-            logger.debug(f'async feelslike_now: Error, cannot find {resort_key}')
+            logger.debug(f'async def feelslike_now: Error, cannot find {resort_key}')
             await ctx.send(f'Checking "feels like" temperature... please check your DM')
             await dmchannel.send(f'Error, I cannot find the key "{resort_key}" in my database, please check the key and try again.')
 
 
 # Checks if the user is a member, if not, it asks the users to !accept the rules
     else:
-        logger.debug(f'async check_temp_now: Author {ctx.author} not part of Member role.')
+        logger.debug(f'async def check_feelslike_now: Author {ctx.author} not part of Member role.')
         await ctx.send('Invalid command, please !accept the rules.')
 
 # Bot even tthat sends a DM to the new member when they join the server
 @bot.event
 async def on_member_join(member): 
-    logger.debug(f'async on_member_join')
+    logger.debug(f'async def on_member_join')
     logger.debug(f'{member.name} has joined the server...')
     logger.debug(f'{member.name} ID: {member.id}')    
     logger.debug(f'Sending DM to {member.name}')
