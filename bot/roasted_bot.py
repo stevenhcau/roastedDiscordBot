@@ -37,6 +37,7 @@ from snowapp import snow_report# pylint: disable=import-error
 os.chdir(D_NAME)
 
 DESCRIPTION = "This is a discord bot for the roasted server."
+HELLO_VAR = "untracked variable"
 
 # ------------------------------------------------------------logger------------------------------------------------------------
 
@@ -425,6 +426,8 @@ async def on_member_join(member):
     
     welcomeMessage = "Welcome to this server. Please reply with read the rules below and reply with '!accept' to join the server."
     await member.send(content=welcomeMessage)
+
+#TODO: Create functions to check tomorrow's weather, precipitation, feels like... etc. 
 
 # ------------------------------------------------------------AWS S3------------------------------------------------------------
 
