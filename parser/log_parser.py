@@ -81,7 +81,7 @@ def canada_snow_report_count(log_file):
 # Returns the total number of times !checkfeelslike command is passed
 # Resort that is queuried is determined by passing resort_key arg
 def feelslike_now_count(log_file, resort_key):
-    regex = re.compile(r'\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d,\d\d\d:DEBUG:__mp_main__: async def feelslike_now: Command \(\"!checkfeelslike [a-zA-Z0-9\D]{2,32}\d\d\d\d\"\):')
+    regex = re.compile(r'\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d,\d\d\d:DEBUG:__mp_main__: async def feelslike_now: Command \(\"!checkfeelslike [a-zA-Z0-9\D]{2,32}\"\):')
     matches = regex.findall(log_file)
     number_matches = len(matches)
     logger.debug(f'def feelslike_now_count: resort_key: {str(resort_key)}: return value: {number_matches}')
@@ -90,7 +90,7 @@ def feelslike_now_count(log_file, resort_key):
 # Returns the total number of times !checksnow command is passed
 # Resort that is queuried is determined by passing resort_key arg
 def checksnow_count(log_file, resort_key):
-    regex = re.compile(r'\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d,\d\d\d:DEBUG:__mp_main__: async def check_4day_snow: Command \(\"!checksnow [a-zA-Z0-9\D]{2,32}\d\d\d\d\"\):')
+    regex = re.compile(r'\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d,\d\d\d:DEBUG:__mp_main__: async def check_4day_snow: Command \(\"!checksnow [a-zA-Z0-9\D]{2,32}\"\):')
     matches = regex.findall(log_file)
     number_matches = len(matches)
     logger.debug(f'def checksnow_count: resort_key: {str(resort_key)}: return value: {number_matches}')    
@@ -99,10 +99,38 @@ def checksnow_count(log_file, resort_key):
 # Returns the total number of times !checktemp command is passed
 # Resort that is queuried is determined by passing resort_key arg
 def checktemp_count(log_file, resort_key):
-    regex = re.compile(r'\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d,\d\d\d:DEBUG:__mp_main__: async def check_temp_now: Command \(\"!checktemp [a-zA-Z0-9\D]{2,32}\d\d\d\d\"\):')
+    regex = re.compile(r'\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d,\d\d\d:DEBUG:__mp_main__: async def check_temp_now: Command \(\"!checktemp [a-zA-Z0-9\D]{2,32}\"\):')
     matches = regex.findall(log_file)
     number_matches = len(matches)
     logger.debug(f'def checktemp_count: resort_key: {str(resort_key)}: return value: {number_matches}')        
+    return number_matches
+
+def checktomorrowtemp_count(log_file, resort_key):
+    regex = re.compile(r'\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d,\d\d\d:DEBUG:__mp_main__: async def check_temp_tomorrow: Command \(\"!checktomorrowtemp [a-zA-Z0-9\D]{2,32}\"\):')
+    matches = regex.findall(log_file)
+    number_matches = len(matches)
+    logger.debug(f'def checktomorrowtemp_count: resort_key: {str(resort_key)}: return value: {number_matches}')        
+    return number_matches
+
+def checktomorrowfeelslike_count(log_file, resort_key):
+    regex = re.compile(r'\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d,\d\d\d:DEBUG:__mp_main__: async def check_feelslike_tomorrow: Command \(\"!checktomorrowfeelslike [a-zA-Z0-9\D]{2,32}\"\):')
+    matches = regex.findall(log_file)
+    number_matches = len(matches)
+    logger.debug(f'def checktomorrowfeelslike_count: resort_key: {str(resort_key)}: return value: {number_matches}')        
+    return number_matches
+
+def checktomorrowprecipitation_count(log_file, resort_key):
+    regex = re.compile(r'\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d,\d\d\d:DEBUG:__mp_main__: async def check_precipitation_tomorrow: Command \(\"!checktomorrowprecipitation [a-zA-Z0-9\D]{2,32}\"\):')
+    matches = regex.findall(log_file)
+    number_matches = len(matches)
+    logger.debug(f'def checktomorrowprecipitation_count: resort_key: {str(resort_key)}: return value: {number_matches}')        
+    return number_matches
+
+def checktomorrow_count(log_file, resort_key):
+    regex = re.compile(r'\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d,\d\d\d:DEBUG:__mp_main__: async def check_tomorrow: Command \(\"!checktomorrow [a-zA-Z0-9\D]{2,32}\"\):')
+    matches = regex.findall(log_file)
+    number_matches = len(matches)
+    logger.debug(f'def checktomorrow_count: resort_key: {str(resort_key)}: return value: {number_matches}')        
     return number_matches
 
 # Returns the total number of times !resort command is passed
@@ -237,3 +265,4 @@ with open('discord.log', 'r', encoding='utf-8') as f:
      log_string = f.read()
 
 print(active_users(log_string))
+print(resort_has_snow_count(log_string, 'sunshine'))

@@ -8,10 +8,11 @@
 
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 import dateutil.parser as dp
 import logging
 from dotenv import load_dotenv
+import statistics
 import sys
 import requests
 from tzlocal import get_localzone
@@ -400,7 +401,7 @@ class Resort():
         logger.debug(f'Returning dictionary containing time:value pair, "self.wind_speed_forecast_96hr \n')
         return self.wind_speed_forecast_96hr
 
-    # Class method get_precipitation_6hr() returns a dictionary of the temperature against time
+    # Class method get_wind_speed_6hr() returns a dictionary of the temperature against time
     def get_wind_speed_6hr(self):
         logger.debug(f'Function call: get_wind_speed_6hr()')
         time_6hr = [local_time(self.weather_6hr[i]["observation_time"]["value"]) for i in range(0, len(self.weather_6hr))]
@@ -409,10 +410,90 @@ class Resort():
         logger.debug(f'Returning dictionary containing time:value pair, "self.wind_speed_forecast_6hr \n')
         return self.wind_speed_forecast_6hr
 
-    # Class method get_precipitation_now() returns a dictionary of the temperature against time
+    # Class method get_wind_speed_now() returns a dictionary of the temperature against time
     def get_wind_speed_now(self):
         logger.debug(f'Function call: get_wind_speed_now()')
         self.wind_speed_forecast_now = {self.now_time: self.now_windspeed}
         logger.debug(f'Returning dictionary containing time:value pair, "self.wind_speed_forecast_now \n')
         return self.wind_speed_forecast_now
 
+# Tomorrow statistics   
+
+    # Class method get_tomorrow_temp() returns the float value of the temperature tomorrow
+    # This method calls the get_temperature_96hr() function in order to get the dictionary containing time vs temperature
+    def get_tomorrow_temp(self):
+        logger.debug(f'Function call: get_tomorrow_temp()')
+
+        delta = timedelta(1)
+        tomorrow = datetime.now(timezone.utc) + delta
+
+        temp_dict = self.get_temperature_96hr()
+        tomorrow_temp_list = []
+
+        for key, value in temp_dict.items():
+            if key < tomorrow:
+                tomorrow_temp_list.append(value)
+
+        tomorrow_temp = statistics.mean(tomorrow_temp_list)
+
+        return tomorrow_temp
+    
+
+    # Class method get_tomorrow_feelslike() returns the float value of the feels like temperature tomorrow
+    # This method calls the get_feels_like_96hr() function in order to get the dictionary containing the time vs feels like temperature
+    def get_tomorrow_feelslike(self):
+        logger.debug(f'Function call: get_tomorrow_feelslike()')
+
+        delta = timedelta(1)
+        tomorrow = datetime.now(timezone.utc) + delta
+
+        feelslike_dict = self.get_feels_like_96hr()
+        tomorrow_feelslike_list = []
+
+        for key, value in feelslike_dict.items():
+            if key < tomorrow:
+                tomorrow_feelslike_list.append(value)
+
+        tomorrow_feelslike = statistics.mean(tomorrow_feelslike_list)
+
+        return tomorrow_feelslike
+
+    # Class method get_tomorrow_precipitation() returns the amount of precipitation tomorrow
+    # This method calls the get_precipitation_96hr() function in order to get the dictionary containing the time vs feels like temperature
+    def get_tomorrow_precipitation(self):
+        logger.debug(f'Function call: get_tomorrow_precipitation()')
+
+        delta = timedelta(1)
+        tomorrow = datetime.now(timezone.utc) + delta
+
+        precipitation_dict = self.get_precipitation_96hr()
+        tomorrow_precipitation_list = []
+
+        for key, value in precipitation_dict.items():
+            if key < tomorrow:
+                tomorrow_precipitation_list.append(value)
+        
+        tomorrow_precipitation = sum(tomorrow_precipitation_list)
+
+        return tomorrow_precipitation   
+
+    # Class method get_tomorrow_precipitation_type() returns the type of precipitation expected tomorrow
+    # This method calls the get_precipitation_type_96hr() function in order to get the dictionary containing the time vs feels like temperature
+    def get_tomorrow_precipitation_type(self):
+        logger.debug(f'Function call: get_tomorrow_precipitation_type()')
+
+        delta = timedelta(1)
+        tomorrow = datetime.now(timezone.utc) + delta
+
+        precipitation_type_dict = self.get_precipitation_type_96hr()
+        tomorrow_precipitation_type_list = []
+        tomorrow_precipitation_type = []
+
+        for key, value in precipitation_type_dict.items():
+            if key < tomorrow:
+                tomorrow_precipitation_type_list.append(value)
+
+        [tomorrow_precipitation_type.append(value) for value in tomorrow_precipitation_type_list if value not in tomorrow_precipitation_type]
+        tomorrow_precipitation_type.remove('none')
+
+        return tomorrow_precipitation_type          

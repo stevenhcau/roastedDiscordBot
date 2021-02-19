@@ -37,7 +37,6 @@ from snowapp import snow_report# pylint: disable=import-error
 os.chdir(D_NAME)
 
 DESCRIPTION = "This is a discord bot for the roasted server."
-HELLO_VAR = "untracked variable"
 
 # ------------------------------------------------------------logger------------------------------------------------------------
 
@@ -264,6 +263,7 @@ async def USA_snow_report(ctx):
         logger.debug(f'Author {ctx.author} not part of Member role.')
         await ctx.send('Invalid command, please !accept the rules.')
 
+# !resorts command lists the resorts that the user can request with the snow report module within discord
 @bot.command(name='resorts', help='Lists the resorts that the user can request snow report forecasts')
 async def list_resorts(ctx):
     logger.debug(f'async def list_resorts: Command ("!resorts"): Author ({ctx.author}): Channel: ({ctx.channel})')
@@ -300,6 +300,7 @@ async def list_resorts(ctx):
         logger.debug(f'async def list_resorts: Author {ctx.author} not part of Member role.')
         await ctx.send('Invalid command, please !accept the rules.')
 
+# !checksnow command checks for snow in the forecast for the resort that is passed as an argument
 @bot.command(name='checksnow', help='Checks for snow in the forecast for the resort passed as an argument')
 async def check_4day_snow(ctx, resort_key):
     logger.debug(f'async check_4day_snow: Command ("!checksnow {resort_key}"): Author ({ctx.author}): Channel: ({ctx.channel})')
@@ -380,7 +381,7 @@ async def check_temp_now(ctx, resort_key):
         logger.debug(f'async def check_temp_now: Author {ctx.author} not part of Member role.')
         await ctx.send('Invalid command, please !accept the rules.')
 
-
+# !checkfeelslike command checks feels like temperature for the resort that is passed as an argument
 @bot.command(name='checkfeelslike', help='Checks for feels like temperature for the resort passed as an argument')
 async def check_feelslike_now(ctx, resort_key):
     logger.debug(f'async def feelslike_now: Command ("!checkfeelslike {resort_key}"): Author ({ctx.author}): Channel: ({ctx.channel})')
@@ -414,6 +415,156 @@ async def check_feelslike_now(ctx, resort_key):
 # Checks if the user is a member, if not, it asks the users to !accept the rules
     else:
         logger.debug(f'async def check_feelslike_now: Author {ctx.author} not part of Member role.')
+        await ctx.send('Invalid command, please !accept the rules.')
+
+# !checktomorrowtemp checks the temperature for tomorrow for the requested resort
+@bot.command(name='checktomorrowtemp', help='Checks the temperature tomorrow for the requested resort')
+async def check_temp_tomorrow(ctx, resort_key):
+    logger.debug(f'async def check_temp_tomorrow: Command ("!checktomorrowtemp {resort_key}"): Author ({ctx.author}): Channel: ({ctx.channel})')
+
+    guild_id = bot.get_guild(int(748917163313725704))
+    role = guild_id.get_role(int(800907308887572521))
+    member = guild_id.get_member(ctx.author.id)
+
+    dmchannel = await ctx.author.create_dm()
+
+# Checks if the user is a member, if they are, it executes it.
+    if role in member.roles:
+        logger.debug(f'async def check_temp_tomorrow: {ctx.author} role authorization successful') 
+
+        if resort_key in snow_report.RESORT_KEYS:
+            logger.debug(f'async def check_temp_tomorrow: Sending requested information')
+            
+
+            resort_object = snow_report.Resort(resort_key)
+            resort_object.request_96hr()
+            resort_temp_tomorrow = resort_object.get_tomorrow_temp()
+
+            await ctx.send(f'Checking the temperature for tomorrow at {resort_object.name}... please check your DM')
+            await dmchannel.send(f'<{resort_object.name}> Temperature: {resort_temp_tomorrow} degrees C')
+
+        else: 
+            logger.debug(f'async def check_temp_tomorrow: Error, cannot find {resort_key}')
+            await ctx.send(f'Checking "feels like" temperature... please check your DM')
+            await dmchannel.send(f'Error, I cannot find the key "{resort_key}" in my database, please check the key and try again.')
+
+# Checks if the user is a member, if not, it asks the users to !accept the rules
+    else:
+        logger.debug(f'async def check_temp_tomorrow: Author {ctx.author} not part of Member role.')
+        await ctx.send('Invalid command, please !accept the rules.')
+
+
+# !checktomorrowfeelslike checks the temperature for tomorrow for the requested resort
+@bot.command(name='checktomorrowfeelslike', help='Checks the feels like temperature tomorrow for the requested resort')
+async def check_feelslike_tomorrow(ctx, resort_key):
+    logger.debug(f'async def check_feelslike_tomorrow: Command ("!checktomorrowfeelslike {resort_key}"): Author ({ctx.author}): Channel: ({ctx.channel})')
+
+    guild_id = bot.get_guild(int(748917163313725704))
+    role = guild_id.get_role(int(800907308887572521))
+    member = guild_id.get_member(ctx.author.id)
+
+    dmchannel = await ctx.author.create_dm()
+
+# Checks if the user is a member, if they are, it executes it.
+    if role in member.roles:
+        logger.debug(f'async def check_feelslike_tomorrow: {ctx.author} role authorization successful') 
+
+        if resort_key in snow_report.RESORT_KEYS:
+            logger.debug(f'async def check_feelslike_tomorrow: Sending requested information')
+
+            resort_object = snow_report.Resort(resort_key)
+            resort_object.request_96hr()
+            resort_feelslike_tomorrow = resort_object.get_tomorrow_feelslike()
+
+            await ctx.send(f'Checking the feels like temperature for tomorrow at {resort_object.name}... please check your DM')
+            await dmchannel.send(f'<{resort_object.name}> Feels like: {resort_feelslike_tomorrow} degrees C')
+
+        else: 
+            logger.debug(f'async def check_feelslike_tomorrow: Error, cannot find {resort_key}')
+            await ctx.send(f'Checking "feels like" temperature... please check your DM')
+            await dmchannel.send(f'Error, I cannot find the key "{resort_key}" in my database, please check the key and try again.')
+
+# Checks if the user is a member, if not, it asks the users to !accept the rules
+    else:
+        logger.debug(f'async def check_feelslike_tomorrow: Author {ctx.author} not part of Member role.')
+        await ctx.send('Invalid command, please !accept the rules.')
+
+# !checktomorrowfeelslike checks the temperature for tomorrow for the requested resort
+@bot.command(name='checktomorrowprecipitation', help='Checks the total amount of precipitation tomorrow for the requested resort')
+async def check_precipitation_tomorrow(ctx, resort_key):
+    logger.debug(f'async def check_precipitation_tomorrow: Command ("!checktomorrowprecipitation {resort_key}"): Author ({ctx.author}): Channel: ({ctx.channel})')
+
+    guild_id = bot.get_guild(int(748917163313725704))
+    role = guild_id.get_role(int(800907308887572521))
+    member = guild_id.get_member(ctx.author.id)
+
+    dmchannel = await ctx.author.create_dm()
+
+# Checks if the user is a member, if they are, it executes it.
+    if role in member.roles:
+        logger.debug(f'async def check_precipitation_tomorrow: {ctx.author} role authorization successful') 
+
+        if resort_key in snow_report.RESORT_KEYS:
+            logger.debug(f'async def check_precipitation_tomorrow: Sending requested information')
+
+            resort_object = snow_report.Resort(resort_key)
+            resort_object.request_96hr()
+            resort_precipitation_tomorrow = resort_object.get_tomorrow_precipitation()
+            resort_precipitation_type_tomorrow = resort_object.get_tomorrow_precipitation_type()
+
+            await ctx.send(f'Checking the precipitation for tomorrow at {resort_object.name}... please check your DM')
+            await dmchannel.send(f'<{resort_object.name}> Total precipitation tomorrow: {resort_precipitation_tomorrow} mm')
+            await dmchannel.send(f'<{resort_object.name}> Precipitation types: {resort_precipitation_type_tomorrow}')
+
+        else: 
+            logger.debug(f'async def check_precipitation_tomorrow: Error, cannot find {resort_key}')
+            await ctx.send(f'Checking precipitation.. please check your DM')
+            await dmchannel.send(f'Error, I cannot find the key "{resort_key}" in my database, please check the key and try again.')
+
+# Checks if the user is a member, if not, it asks the users to !accept the rules
+    else:
+        logger.debug(f'async def check_precipitation_tomorrow: Author {ctx.author} not part of Member role.')
+        await ctx.send('Invalid command, please !accept the rules.')
+
+# !checktomorrow checks the weather for the requested resort
+@bot.command(name='checktomorrow', help='Checks the weather tomorrow for the requested resort')
+async def check_tomorrow(ctx, resort_key):
+    logger.debug(f'async def check_tomorrow: Command ("!checktomorrow {resort_key}"): Author ({ctx.author}): Channel: ({ctx.channel})')
+
+    guild_id = bot.get_guild(int(748917163313725704))
+    role = guild_id.get_role(int(800907308887572521))
+    member = guild_id.get_member(ctx.author.id)
+
+    dmchannel = await ctx.author.create_dm()
+
+# Checks if the user is a member, if they are, it executes it.
+    if role in member.roles:
+        logger.debug(f'async def check_tomorrow: {ctx.author} role authorization successful') 
+
+        if resort_key in snow_report.RESORT_KEYS:
+            logger.debug(f'async def check_tomorrow: Sending requested information')
+
+            resort_object = snow_report.Resort(resort_key)
+            resort_object.request_96hr()
+            resort_temp_tomorrow = resort_object.get_tomorrow_temp()
+            resort_feelslike_tomorrow = resort_object.get_tomorrow_feelslike()
+            resort_precipitation_tomorrow = resort_object.get_tomorrow_precipitation()
+            resort_precipitation_type_tomorrow = resort_object.get_tomorrow_precipitation_type()
+
+            await ctx.send(f'Checking the weather for tomorrow at {resort_object.name}... please check your DM')
+            await dmchannel.send(f'<{resort_object.name}> Temperature: {resort_temp_tomorrow} degrees C')           
+            await dmchannel.send(f'<{resort_object.name}> Feels like: {resort_feelslike_tomorrow} degrees C')         
+            await dmchannel.send(f'<{resort_object.name}> Total precipitation tomorrow: {resort_precipitation_tomorrow} mm')
+            await dmchannel.send(f'<{resort_object.name}> Precipitation types: {resort_precipitation_type_tomorrow}')
+
+        else: 
+            logger.debug(f'async def check_tomorrow: Error, cannot find {resort_key}')
+            await ctx.send(f'Checking weather.. please check your DM')
+            await dmchannel.send(f'Error, I cannot find the key "{resort_key}" in my database, please check the key and try again.')
+
+# Checks if the user is a member, if not, it asks the users to !accept the rules
+    else:
+        logger.debug(f'async def check_tomorrow: Author {ctx.author} not part of Member role.')
         await ctx.send('Invalid command, please !accept the rules.')
 
 # Bot even tthat sends a DM to the new member when they join the server
